@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group 'aaa'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+task buildAsm(type: JavaExec) {
+//    classpath = files('KickAss.jar')
+    classpath += sourceSets.main.runtimeClasspath
+    main = 'kickass.KickAssembler'
+}
+
+build.dependsOn 'buildAsm'
+
+task run(type:Exec) {
+    dependsOn build
+    commandLine 'x64', 'src/main/colors2.prg'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
