@@ -6,6 +6,7 @@ import java.util.HashMap;
 import static io.github.amarcinkowski.c64.utils.Arrays.range;
 import static io.github.amarcinkowski.c64.utils.Numbers.hexInv;
 import static io.github.amarcinkowski.c64.utils.Numbers.hex;
+import static io.github.amarcinkowski.c64.utils.Files.readFile;
 
 public class Decompiler {
 
@@ -46,11 +47,11 @@ public class Decompiler {
     }
 
     public static void main(String[] args) throws IOException {
-        byte[] fileContent = io.github.amarcinkowski.c64.utils.Files.readFile(FILE);
+        byte[] fileContent = readFile(FILE);
         report.parseBytes(fileContent);
-        String memoryStart = hexInv(range(fileContent,0,2));
-        String codeStart = hexInv(range(fileContent,2,4));
-        int codeStartInFile = Integer.parseInt(codeStart,16) - Integer.parseInt(memoryStart,16) + 5;
+        String memoryStart = hexInv(range(fileContent, 0, 2));
+        String codeStart = hexInv(range(fileContent, 2, 4));
+        int codeStartInFile = Integer.parseInt(codeStart, 16) - Integer.parseInt(memoryStart, 16) + 5;
         byte[] codeBlock = range(fileContent, codeStartInFile, fileContent.length);
         readCode(codeBlock);
         report.print();

@@ -19,9 +19,11 @@ public class Numbers {
     }
 
     // test +/- byte numbers
-    public static int dec(byte[] x) {
-        System.out.println("debug " + Arrays.toString(x) + " " + hexInv(x) + " " + Integer.parseInt(hexInv(x), 16));
-        return Integer.parseInt(hexInv(x), 16);
+    public static String dec(byte[] x) {
+        String h = hexInv(x);
+        String d = h.length() > 0 ? "" + Integer.parseInt(hexInv(x), 16) : "";
+        System.out.println("debug " + Arrays.toString(x) + " " + h + " " + d);
+        return d;
     }
 
     public static String arg(byte[] array, Addressing addressing) {
