@@ -24,7 +24,7 @@ public class Decompiler {
 
     // init builders
     static {
-        bytecode.append("\n-- bytecode\n");
+        bytecode.append("\n-- bytecode\n00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f\n\n");
         decompiled.append("\n--\nADDR    MNEMONIC HEX  LENGTH       DATA\n");
     }
 
@@ -33,8 +33,8 @@ public class Decompiler {
         map.put("code start addr", MemType.ADDRESS);
     }
 
-//    final static String FILE = "/home/am/git/c64asm/colors2.prg";
-    final static String FILE = "/home/am/git/c64game/target/commodore.prg";
+    //    final static String FILE = "/home/am/git/c64asm/colors2.prg";
+    final static String FILE = "src/test/resources/colors2.prg";
 
     static String hex(byte x) {
         return String.format("%02x", x);
@@ -42,7 +42,7 @@ public class Decompiler {
 
     static String hex(byte[] x) {
         String s = "";
-        for (int j = x.length - 1; j >= 0; j--) {
+        for (int j = 0; j < x.length; j++) {
             s += hex(x[j]) + " ";
         }
         return s;
@@ -59,7 +59,7 @@ public class Decompiler {
     static int address = 0x0801;
 
     static String format(Opcode opcode, byte[] value) {
-        return String.format("%04x %10s (%02x) L:%d %15s\n", address, opcode, opcode.mnemonic, opcode.bytes, hex(value));
+        return String.format("%04x %10s (%02x) L:%d %15s ;\t%s\n", address, opcode, opcode.mnemonic, opcode.bytes, hex(value), opcode.code);
     }
 
     static void raport() {
@@ -67,18 +67,44 @@ public class Decompiler {
         System.out.println(decompiled.toString());
     }
 
-    public static void main(String[] args) throws IOException {
-        byte[] fileContent = readFile(FILE);
-        for (int i = 0; i < fileContent.length; i++) {
-            String mnemonic = hex(fileContent[i]);
+    static byte[] range(byte[] arr, int start, int end) {
+        return Arrays.copyOfRange(arr, start, end);
+    }
+
+    static void readByteCode(byte[] byteCode) {
+        for (int i = 0; i < byteCode.length; i++) {
+            bytecode.append(hex(byteCode[i]));
+            if (i > 0 && i % 16 == 0) {
+                bytecode.append("\n");
+            } else {
+                bytecode.append(" ");
+            }
+        }
+    }
+
+    static void readCode(byte[] codeBlock) {
+        for (int i = 0; i < codeBlock.length; i++) {
+            String mnemonic = hex(codeBlock[i]);
             Opcode opcode = get(mnemonic);
-            byte[] value = Arrays.copyOfRange(fileContent, i + 1, i + opcode.bytes);
-            bytecode.append(mnemonic);
-            bytecode.append(" ");
+            byte[] value = range(codeBlock, i + 1, i + opcode.bytes);
             decompiled.append(format(opcode, value));
             i += opcode.bytes - 1;
             address += i;
         }
+    }
+
+    static void getAddr() {
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        byte[] fileContent = readFile(FILE);
+        readByteCode(fileContent);
+        int memoryStart = 0x0801;
+        int codeStart = 0x080b;
+        int codeStartInFile = codeStart - memoryStart + 5;
+        byte[] codeBlock = range(fileContent, codeStartInFile, fileContent.length);
+        readCode(codeBlock);
         raport();
     }
 

@@ -12,16 +12,18 @@ repositories {
 }
 
 task buildAsm(type: JavaExec) {
-//    classpath = files('KickAss.jar')
+    classpath = files('lib/KickAss.jar')
     classpath += sourceSets.main.runtimeClasspath
     main = 'kickass.KickAssembler'
+    args 'src/test/resources/colors2.asm'
 }
 
 build.dependsOn 'buildAsm'
 
 task run(type:Exec) {
     dependsOn build
-    commandLine 'x64', 'src/main/colors2.prg'
+    // TODO if prg file doesn't exist break with err msg
+    commandLine 'x64', 'src/test/resources/colors2.prg'
 }
 
 dependencies {
