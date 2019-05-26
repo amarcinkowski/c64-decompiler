@@ -586,6 +586,10 @@ public enum Opcode {
         this.timeb = 0;
     }
 
+    static Opcode get(String mnemonic) {
+        return byMnemonic(Integer.parseInt(mnemonic, 16));
+    }
+
     @Override
     public String toString() {
         return this.name();
