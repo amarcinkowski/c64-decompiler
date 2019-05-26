@@ -2,6 +2,8 @@ package io.github.amarcinkowski.c64.utils;
 
 import io.github.amarcinkowski.c64.Addressing;
 
+import java.util.Arrays;
+
 public class Numbers {
 
     public static String hex(byte x) {
@@ -16,12 +18,18 @@ public class Numbers {
         return s;
     }
 
+    // test +/- byte numbers
+    public static int dec(byte[] x) {
+        System.out.println("debug " + Arrays.toString(x) + " " + hexInv(x) + " " + Integer.parseInt(hexInv(x), 16));
+        return Integer.parseInt(hexInv(x), 16);
+    }
+
     public static String arg(byte[] array, Addressing addressing) {
         String a = addressing.prefix;
         if (array.length == 1) {
             a += "$" + hex(array);
         } else if (array.length == 2) {
-            a += "$" + getAddress(array);
+            a += "$" + hexInv(array);
         } else a = "??";
         a += addressing.postfix;
         return a;
@@ -29,9 +37,11 @@ public class Numbers {
 
 
     // +test 00 01 == 256 + 1
-    public static String getAddress(byte[] array) {
-        String s = String.format("%02x%02x", array[1], array[0]);
-        System.out.println("debug " + s);
+    public static String hexInv(byte[] array) {
+        String s = "";
+        for (int j = array.length - 1; j >= 0; j--) {
+            s += hex(array[j]);
+        }
         return s;
     }
 }

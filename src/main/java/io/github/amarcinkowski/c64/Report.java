@@ -1,7 +1,5 @@
 package io.github.amarcinkowski.c64;
 
-import java.util.Arrays;
-
 import static io.github.amarcinkowski.c64.utils.Numbers.*;
 
 public class Report {
@@ -18,7 +16,7 @@ public class Report {
     static String format(Opcode opcode, byte[] value) {
         // TODO add address
         int address = 0;
-        return String.format("%04x %10s (%02x) L:%d %15s ;\t%s %s %20s %s\n", address, opcode, opcode.mnemonic, opcode.bytes, hex(value), opcode.code, arg(value, opcode.addressing), opcode.description, Arrays.toString(value));
+        return String.format("%04x %10s (%02x) L:%d %15s ;\t%s %s\t\t//%25s %s\n", address, opcode, opcode.mnemonic, opcode.bytes, hex(value), opcode.code, arg(value, opcode.addressing), opcode.description, dec(value));
     }
 
     void parseBytes(byte[] array) {
