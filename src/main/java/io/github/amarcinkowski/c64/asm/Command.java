@@ -12,7 +12,7 @@ public class Command implements Comparable<Command> {
 
     @Override
     public String toString() {
-        return hex(opcode.mnemonic) + (data.length > 0 ? Bytecode.BETWEEN_OPCODE_AND_DATA + hex(data) : "");
+        return hex(opcode.hex) + (data.length > 0 ? Bytecode.BETWEEN_OPCODE_AND_DATA + hex(data) : "");
     }
 
     @Override

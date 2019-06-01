@@ -1,60 +1,38 @@
 package io.github.amarcinkowski.c64;
 
-import java.io.IOException;
-import java.util.HashMap;
+import io.github.amarcinkowski.c64.asm.Parser;
+import io.github.amarcinkowski.c64.output.Language;
+import io.github.amarcinkowski.c64.output.LanguagesFactory;
+import io.github.amarcinkowski.c64.utils.Files;
 
-import static io.github.amarcinkowski.c64.utils.Arrays.range;
-import static io.github.amarcinkowski.c64.utils.Numbers.hexInv;
-import static io.github.amarcinkowski.c64.utils.Numbers.hex;
+import java.io.IOException;
+
 import static io.github.amarcinkowski.c64.utils.Files.readFile;
 
 public class Decompiler {
 
-    enum MemType {
-        ADDRESS(2);
-        int length;
-
-        MemType(int length) {
-            this.length = length;
-        }
-    }
-
-
-    static HashMap<String, MemType> map = new HashMap<>();
-
-    static {
-        map.put("target mem addr", MemType.ADDRESS);
-        map.put("code start addr", MemType.ADDRESS);
-    }
-
-    //    final static String FILE = "/home/am/git/c64asm/colors2.prg";
-    final static String FILE = "src/test/resources/colors2.prg";
-
-    static int address = 0x0801;
-
-
-    static Report report = new Report();
-
-    static void readCode(byte[] codeBlock) {
-        for (int i = 0; i < codeBlock.length; i++) {
-            String mnemonic = hex(codeBlock[i]);
-            Opcode opcode = Opcode.get(mnemonic);
-            byte[] dataArguments = range(codeBlock, i + 1, i + opcode.bytes);
-            report.addCommand(opcode, dataArguments);
-            i += opcode.bytes - 1;
-            address += i;
-        }
-    }
+        final static String FILE = "/home/am/git/c64asm/colors2.prg";
+//    final static String FILE = "src/test/resources/colors2.prg";
+//    final static String FILE = "/home/am/Pulpit/giana/ggs.prg";
+//    great giana s.+.prg
+    final static byte[] fileContent = readFile(FILE);
 
     public static void main(String[] args) throws IOException {
-        byte[] fileContent = readFile(FILE);
-        report.parseBytes(fileContent);
-        String memoryStart = hexInv(range(fileContent, 0, 2));
-        String codeStart = hexInv(range(fileContent, 2, 4));
-        int codeStartInFile = Integer.parseInt(codeStart, 16) - Integer.parseInt(memoryStart, 16) + 5;
-        byte[] codeBlock = range(fileContent, codeStartInFile, fileContent.length);
-        readCode(codeBlock);
-        report.print();
+        Parser p = new Parser();
+        p.parse(fileContent);
+
+        Language asm = LanguagesFactory.get("asm");
+        Language bytecode = LanguagesFactory.get("byte");
+//        Language basic = LanguagesFactory.get("basic");
+
+        bytecode.parse(p);
+        asm.parse(p);
+//        basic.parse(p);
+
+        System.out.println(bytecode.toString());
+        System.out.println(asm.toString());
+        Files.toFile(asm.toString());
+//        System.out.println(basic.toString());
     }
 
 }
