@@ -1,8 +1,8 @@
-package io.github.amarcinkowski.c64;
+package io.github.amarcinkowski.c64.asm;
 
 import java.util.HashMap;
 
-import static io.github.amarcinkowski.c64.Addressing.*;
+import static io.github.amarcinkowski.c64.asm.Addressing.*;
 
 @SuppressWarnings("unused")
 public enum Opcode {
@@ -379,6 +379,8 @@ public enum Opcode {
     SRE_AY("sre",false, 0x5B, "M <- (M >> 1) ⊻ A", ABSOLUTEY, 3, 7),
     NOP_AX3("nop",false, 0x5C, "[no operation]", ABSOLUTEX, 3, 4, 1),
     EOR_AX("eor",true, 0x5D, "A <- (A) ⊻ M", ABSOLUTEX, 3, 4, 1),
+    // MISSING ???
+    LSR_AXxxx("lsr",true, 0x5E, "??", ABSOLUTEX, 3, 7),
     SRE_AX("sre",false, 0x5F, "M <- (M >> 1) ⊻ A", ABSOLUTEX, 3, 7),
     RTS_IMP("rts",true, 0x60, "PC <- (Stack)", IMPLIED, 1, 6),
     ADC_INDX("adc",true, 0x61, "A <- (A) + M + C", INDX, 2, 6),
@@ -542,14 +544,14 @@ public enum Opcode {
     ISB_AX("isb",false, 0xFF, "M <- (M) - 1,A <- (A)-M-~C", ABSOLUTEX, 3, 7),
     ;
 
-    String code;
-    boolean standard;
-    int mnemonic;
-    String description;
-    Addressing addressing;
-    int bytes;
-    int time;
-    int timeb;
+    public String code;
+    public boolean standard;
+    public int mnemonic;
+    public String description;
+    public Addressing addressing;
+    public int bytes;
+    public int time;
+    public int timeb;
 
 
     static HashMap<Integer, Opcode> map = new HashMap<>();
@@ -586,7 +588,7 @@ public enum Opcode {
         this.timeb = 0;
     }
 
-    static Opcode get(String mnemonic) {
+    public static Opcode get(String mnemonic) {
         return byMnemonic(Integer.parseInt(mnemonic, 16));
     }
 
