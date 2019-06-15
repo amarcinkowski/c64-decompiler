@@ -26,7 +26,7 @@ public class Parser {
 //        map.put("mnemonic start addr", MemType.ADDRESS);
 //    }
 
-    public ArrayList<Command> commands = new ArrayList<>();
+    public ArrayList<Instruction> instructions = new ArrayList<>();
 
     String memoryStart;
     String codeStart;
@@ -41,13 +41,13 @@ public class Parser {
         System.out.println("in file " + codeStartInFile);
     }
 
-    public Command getCommand(byte[] codeBlock, int i) {
+    public Instruction getCommand(byte[] codeBlock, int i) {
         String mnemonic = hex(codeBlock[i]);
         Opcode opcode = Opcode.get(mnemonic);
        // System.out.println("mnemo " + hex + ", opcode " + opcode);
         byte[] data = range(codeBlock, i + 1, i + opcode.bytes);
         int addr = Integer.parseInt(codeStart, 16) + i + 3;
-        Command c = new Command();
+        Instruction c = new Instruction();
         c.opcode = opcode;
         c.data = data;
         c.address = addr;
@@ -56,10 +56,10 @@ public class Parser {
 
     public void parse(byte[] fileContent) {
         readHeaders(fileContent);
-        byte[] codeBlock = range(fileContent, /*codeStartInFile*/2, fileContent.length);
+        byte[] codeBlock = range(fileContent, codeStartInFile, fileContent.length);
         for (int i = 0; i < codeBlock.length; i++) {
-            Command c = getCommand(codeBlock, i);
-            commands.add(c);
+            Instruction c = getCommand(codeBlock, i);
+            instructions.add(c);
             i += c.opcode.bytes - 1;
         }
     }

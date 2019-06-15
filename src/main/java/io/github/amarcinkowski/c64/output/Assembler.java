@@ -1,6 +1,6 @@
 package io.github.amarcinkowski.c64.output;
 
-import io.github.amarcinkowski.c64.asm.Command;
+import io.github.amarcinkowski.c64.asm.Instruction;
 import io.github.amarcinkowski.c64.asm.Parser;
 
 import java.util.List;
@@ -15,21 +15,21 @@ public class Assembler extends Language {
         decompiled.append("\n--\nADDR    MNEMONIC HEX  LENGTH       DATA\n");
     }
 
-    static String format(Command c) {
+    static String format(Instruction c) {
         // TODO add address
         int mnemo = c.opcode.hex;
         int bytes = c.opcode.bytes;
         String args = hex(c.data);
-        String code = c.opcode.mnemonic;
+        String code = c.opcode.mnemonic.toString();
         String arg = arg(c.data, c.opcode.addressing);
-        String desc = c.opcode.description;
+        String desc = c.opcode.mnemonic.function;
 //        String dec = dec(c.data);
-        return String.format("%04x %10s (%02x) L:%d %15s |%10s %8s //%25s %-8s | \n", c.address, c.opcode, mnemo, bytes, args, code, arg, desc, /*dec*/"");
+        return String.format("%04x %10s (%02x) L:%d %10s |%5s %8s //%12s %-8s | \n", c.address, c.opcode, mnemo, bytes, args, code, arg, desc, /*dec*/"");
     }
 
     public void parse(Parser p) {
-        List<Command> commands = p.commands;
-        for(Command c : commands) {
+        List<Instruction> instructions = p.instructions;
+        for(Instruction c : instructions) {
             decompiled.append(format(c));
         }
     }

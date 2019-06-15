@@ -1,6 +1,6 @@
 package io.github.amarcinkowski.c64.output;
 
-import io.github.amarcinkowski.c64.asm.Command;
+import io.github.amarcinkowski.c64.asm.Instruction;
 import io.github.amarcinkowski.c64.asm.Parser;
 
 import java.util.List;
@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 
 import static io.github.amarcinkowski.c64.utils.Numbers.dec;
 
+// http://fileformats.archiveteam.org/wiki/Commodore_BASIC_tokenized_file
+// tokenized basic file
 public class Basic extends Language {
 
-    String getCommand(Command c) {
+    String getCommand(Instruction c) {
         switch (c.opcode) {
             case LDA_IMM:
                 return "A=" + dec(c.data);
@@ -30,9 +32,9 @@ public class Basic extends Language {
 
     @Override
     public void parse(Parser p) {
-        List<Command> commands = p.commands;
+        List<Instruction> instructions = p.instructions;
         int line = 1;
-        for (Command c : commands) {
+        for (Instruction c : instructions) {
             output.add((line++*10) +" "+ getCommand(c));
         }
     }

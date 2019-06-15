@@ -4,7 +4,7 @@ import io.github.amarcinkowski.c64.output.Bytecode;
 
 import static io.github.amarcinkowski.c64.utils.Numbers.hex;
 
-public class Command implements Comparable<Command> {
+public class Instruction implements Comparable<Instruction> {
 
     public Opcode opcode;
     public byte[] data;
@@ -16,7 +16,7 @@ public class Command implements Comparable<Command> {
     }
 
     @Override
-    public int compareTo(Command command) {
-        return this.address - command.address;
+    public int compareTo(Instruction instruction) {
+        return this.address - instruction.address;
     }
 }

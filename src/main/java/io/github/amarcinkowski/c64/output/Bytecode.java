@@ -1,6 +1,6 @@
 package io.github.amarcinkowski.c64.output;
 
-import io.github.amarcinkowski.c64.asm.Command;
+import io.github.amarcinkowski.c64.asm.Instruction;
 import io.github.amarcinkowski.c64.asm.Parser;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public class Bytecode extends Language {
     }
 
     public void parse(Parser p) {
-        List<Command> commands = p.commands;
-        for(Command c : commands) {
+        List<Instruction> instructions = p.instructions;
+        for(Instruction c : instructions) {
             output.add(c.toString());
         }
     }
