@@ -4,6 +4,7 @@ package io.github.amarcinkowski.c64.asm;
  * Based on 6502/6510/8500/8502 Opcode matrix (http://www.oxyron.de/html/opcodes02.html)
  */
 public enum Mnemonic {
+
     ADC("adc", "ADd with Carry", "A:=A+{adr}"),
     ANC("anc", "", "{adr}:=A&X&H"),
     AND("and", "bitwise AND with accumulator", "A:=(A&#{imm})/2"),

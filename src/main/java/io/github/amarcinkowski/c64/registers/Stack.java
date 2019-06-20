@@ -1,4 +1,4 @@
-package io.github.amarcinkowski;
+package io.github.amarcinkowski.c64.registers;
 
 /**
  * https://www.c64-wiki.com/wiki/Stack
