@@ -11,7 +11,7 @@ import static io.github.amarcinkowski.c64.utils.Files.readFile;
 
 public class Decompiler {
 
-        final static String FILE = "/home/am/git/c64asm/colors2.prg";
+        final static String FILE = "src/test/resources/colors2.prg";
 //    final static String FILE = "src/test/resources/colors2.prg";
 //    final static String FILE = "/home/am/Pulpit/giana/ggs.prg";
 //    great giana s.+.prg

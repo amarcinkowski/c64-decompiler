@@ -1,8 +1,10 @@
 package io.github.amarcinkowski.c64.memory;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public enum MemoryAddress {
 
@@ -375,15 +377,26 @@ public enum MemoryAddress {
     $FFFE_$FFFF(65534, 2, "$FF48", "Execution address of interrupt service routine."),//
     ;
 
-    public static MemoryAddress[] getMemoryAdres(Integer adr) {
-        System.out.print("\nadr " + adr);
-        Object[] ma = Arrays.stream(MemoryAddress.values()).filter(p -> p.start <= adr && (p.start + p.size - 1 >= adr)).sorted().toArray();//.findFirst().orElse(null);
-        for(Object o : ma) {
-            System.out.print(" " + o);
-            MemoryMap mm = Arrays.stream(MemoryMap.values()).filter(p -> p.getMemory() == o).findFirst().orElse(null);
-            System.out.print(" " + mm);
+    static SmallestRangeSorter srs = new SmallestRangeSorter();
+    final static List<MemoryAddress> memoryAddressRangeSorted = Arrays.stream(MemoryAddress.values()).sorted(srs).collect(Collectors.toList());
+
+    public static MemoryAddress getMemoryAdres(String adr) {
+        try {
+            Integer address = Integer.parseInt(adr);
+            MemoryAddress ma = memoryAddressRangeSorted.stream().filter(p -> p.start <= address && (p.start + p.size - 1 >= address)).findFirst().orElse(null);
+            return ma;
+        } catch (Exception e) {
+            System.err.println("wrong or no adr");
+            return null;
         }
-        return null;
+//        System.out.print("\nadr " + adr);
+//        Object[] ma = Arrays.stream(MemoryAddress.values()).filter(p -> p.start <= adr && (p.start + p.size - 1 >= adr)).sorted(srs).toArray();//.findFirst().orElse(null);
+
+//        for(Object o : ma) {
+//            System.out.print(" " + ma);
+//            MemoryMap mm = Arrays.stream(MemoryMap.values()).filter(p -> p.getMemory() == ma).findFirst().orElse(null);
+//            System.out.print(" " + mm);
+//        }
     }
 
     private MemoryAddress(int start, int size, String def, String desc) {

@@ -1,5 +1,9 @@
 package io.github.amarcinkowski.c64.memory;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static io.github.amarcinkowski.c64.memory.MemoryAddress.*;
 
 public enum MemoryMap {
@@ -1585,12 +1589,16 @@ public enum MemoryMap {
 	EXECUTION_ADDRESS_OF_INTERRUPT_SERVICE_ROUTINE_FF($FFFE_$FFFF),
 
 	;
-	private MemoryMap(MemoryAddress m) {
+	MemoryAddress m;
+
+	public static MemoryMap getByAddress(MemoryAddress ma) {
+		return Arrays.stream(MemoryMap.values()).filter(p -> p.getMemory() == ma).findFirst().orElse(null);
+	}
+
+	MemoryMap(MemoryAddress m) {
 		this.m = m;
 	}
 
-	MemoryAddress m;
-	
 	public MemoryAddress getMemory() {
 		return m;
 	}
