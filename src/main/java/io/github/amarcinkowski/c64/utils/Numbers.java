@@ -60,4 +60,13 @@ public class Numbers {
         }
         return s;
     }
+
+    public static String inv(String str) {
+        String[] s = str.split(" ");
+        String out = "";
+        for (int j = s.length - 1; j >= 0; j--) {
+            out += s[j];
+        }
+        return out;
+    }
 }

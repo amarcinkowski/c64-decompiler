@@ -1,13 +1,17 @@
 package io.github.amarcinkowski.c64;
 
 import io.github.amarcinkowski.c64.asm.Parser;
+import io.github.amarcinkowski.c64.asm.template.MemCopyYCounter;
+import io.github.amarcinkowski.c64.output.Bytecode;
 import io.github.amarcinkowski.c64.output.Language;
 import io.github.amarcinkowski.c64.output.LanguagesFactory;
 import io.github.amarcinkowski.c64.utils.Files;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static io.github.amarcinkowski.c64.utils.Files.readFile;
 import static io.github.amarcinkowski.c64.utils.Files.readNBytes;
 
 public class Decompiler {
@@ -96,7 +100,7 @@ public class Decompiler {
 //    final static String FILE = "src/test/resources/colors2.prg";
 //    final static String FILE = "/home/am/Pulpit/giana/ggs.prg";
 //    great giana s.+.prg
-    final static byte[] fileContent = readNBytes(FILE,1024); // readFile(FILE);
+    final static byte[] fileContent = readNBytes(FILE,128); // readFile(FILE);
 
     public static void main(String[] args) throws IOException {
         Parser p = new Parser();
@@ -110,13 +114,33 @@ public class Decompiler {
         asm.parse(p);
 //        basic.parse(p);
 
-        System.out.println(bytecode.toString());
+        System.out.println(Bytecode.decorate(bytecode.toString()) + "\n\n");
+
+        System.out.println(bytecode.toString() + "\n");
+        patterns(bytecode.toString());
+
         System.out.println(asm.toString());
         Files.toFile(asm.toString());
 //        System.out.println(basic.toString());
 
-        System.out.println("x64 -remotemonitor -autoload \"" + FILE + "\" &");
-        System.out.println("telnet 127.0.0.1 6510");
+
+        System.out.println("\n\nx64 -remotemonitor -autoload \"" + FILE + "\" &");
+        System.out.println("telnet 127.0.0.1 6510\n\n");
+    }
+
+    private static void patterns(String bytecode) {
+        String memCopyPattern = MemCopyYCounter.getRegularExpression();
+        System.out.println(memCopyPattern);
+        Pattern pattern = Pattern.compile(memCopyPattern);
+        Matcher m = pattern.matcher(bytecode);
+        while(m.find()) {
+            String desc = MemCopyYCounter.DESC;
+            String[] args =MemCopyYCounter.getArguments(m.group());
+            System.out.println(desc + " " + Arrays.toString(args));
+            String s = String.format(MemCopyYCounter.DESC, args);
+            System.out.println("FOUND " + MemCopyYCounter.NAME + "\t" + m.group()+ "\t" + s);
+        }
+
     }
 
 }

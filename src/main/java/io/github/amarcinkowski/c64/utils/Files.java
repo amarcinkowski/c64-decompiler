@@ -3,7 +3,6 @@ package io.github.amarcinkowski.c64.utils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class Files {
     public static byte[] readFile(String path) {
@@ -18,7 +17,7 @@ public class Files {
     }
 
     public static byte[] readNBytes(String path, int n) {
-        return Arrays.copyOfRange(readFile(path),0,n);
+        return Arrays.range(readFile(path), 0, n);
     }
 
     public static void toFile(String s) {

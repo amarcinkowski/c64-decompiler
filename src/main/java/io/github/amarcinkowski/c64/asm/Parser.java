@@ -47,8 +47,7 @@ public class Parser {
        // System.out.println("mnemo " + hex + ", opcode " + opcode);
         byte[] data = range(codeBlock, i + 1, i + opcode.bytes);
         int addr = Integer.parseInt(codeStart, 16) + i + 3;
-        Instruction c = new Instruction();
-        c.opcode = opcode;
+        Instruction c = new Instruction(opcode);
         c.data = data;
         c.address = addr;
         return c;

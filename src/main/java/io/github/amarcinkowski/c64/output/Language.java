@@ -10,4 +10,8 @@ public abstract class Language {
 
     public abstract void parse(Parser p);
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

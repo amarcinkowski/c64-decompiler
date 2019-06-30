@@ -21,7 +21,7 @@ public class Bytecode extends Language {
 
     public void parse(Parser p) {
         List<Instruction> instructions = p.instructions;
-        for(Instruction c : instructions) {
+        for (Instruction c : instructions) {
             output.add(c.toString());
         }
     }
@@ -39,10 +39,14 @@ public class Bytecode extends Language {
         }
     }
 
+    public static String decorate(String str) {
+        String header = "\n-- output\n00 01 02 03  04 05 06 07  08 09 0a 0b  0c 0d 0e 0f\n\n";
+        String data = str;
+        return header + addNewLines.apply(addSpaces.apply(data));
+    }
+
     @Override
     public String toString() {
-        String header = "\n-- output\n00 01 02 03  04 05 06 07  08 09 0a 0b  0c 0d 0e 0f\n\n";
-        String data = output.stream().map(String::trim).collect(Collectors.joining(COMMAND_ENDING));
-        return header + addNewLines.apply(addSpaces.apply(data));
+        return output.stream().map(String::trim).collect(Collectors.joining(COMMAND_ENDING));
     }
 }

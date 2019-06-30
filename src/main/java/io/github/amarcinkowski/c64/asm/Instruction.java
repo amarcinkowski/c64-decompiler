@@ -10,6 +10,10 @@ public class Instruction implements Comparable<Instruction> {
     public byte[] data;
     public int address;
 
+    public Instruction(Opcode opcode) {
+        this.opcode = opcode;
+    }
+
     @Override
     public String toString() {
         return hex(opcode.hex) + (data.length > 0 ? Bytecode.BETWEEN_OPCODE_AND_DATA + hex(data) : "");
