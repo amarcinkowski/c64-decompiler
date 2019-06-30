@@ -80,7 +80,7 @@ public enum ProcessorStatusFlags {
      * <p>
      * To the current knowledge, this flag is always 1.
      */
-    x("unused", "always 1"),
+    _un("unused", "always 1"),
     /**
      * B   Break flag
      * <p>

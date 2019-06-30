@@ -1,10 +1,8 @@
 package io.github.amarcinkowski.c64.memory;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public enum MemoryAddress {
 

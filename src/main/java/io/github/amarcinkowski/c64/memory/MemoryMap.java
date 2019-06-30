@@ -1,8 +1,6 @@
 package io.github.amarcinkowski.c64.memory;
 
 import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static io.github.amarcinkowski.c64.memory.MemoryAddress.*;
 
@@ -238,6 +236,7 @@ public enum MemoryMap {
 	/**
 	Arithmetic register #3 (5 bytes).
 	*/
+	
 	ARITHMETIC_REGISTER_3 ($0057_$005B),
 	/**
 	Arithmetic register #4 (5 bytes).

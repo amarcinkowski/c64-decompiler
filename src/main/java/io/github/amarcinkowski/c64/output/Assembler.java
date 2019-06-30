@@ -27,7 +27,11 @@ public class Assembler extends Language {
                 // TODO
             case ABSOLUTEY:
             case ABSOLUTE:
+            case ZPAGE:
                 mem = (ma == null ? "?" : ma.toString());
+                break;
+            case RELATIVE:
+                mem = unsigned(dec);
                 break;
             default:
                 mem = dec;

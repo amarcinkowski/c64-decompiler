@@ -7,7 +7,7 @@ public enum Addressing {
     ABSOLUTEY("", ",y"), // AY
     ACCUMULATOR("?", "?"), // ACC
     IMMEDIATE("#", ""), // IMM
-    IMPLIED("?", "?"), // IMP
+    IMPLIED("_", "."), // IMP
     INDIRECT("(", ")"), // IND
     INDX("(", ",x)"), // INDX
     INDY("(", "),y"), // INDY

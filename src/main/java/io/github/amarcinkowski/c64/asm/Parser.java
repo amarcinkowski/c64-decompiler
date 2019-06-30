@@ -35,10 +35,10 @@ public class Parser {
     public void readHeaders(byte[] code) {
         memoryStart = hexInv(range(code, 0, 2));
         codeStart = hexInv(range(code, 2, 4));
-        codeStartInFile = Integer.parseInt(codeStart, 16) - Integer.parseInt(memoryStart, 16) + 5;
-        System.out.println("start " + memoryStart);
-        System.out.println("mnemonic " + codeStart);
-        System.out.println("in file " + codeStartInFile);
+        codeStartInFile = Integer.parseInt(codeStart, 16) - Integer.parseInt(memoryStart, 16) + 4;
+        System.out.println("memory start  " + memoryStart);
+        System.out.println("code start    " + codeStart);
+        System.out.println("in file       " + codeStartInFile);
     }
 
     public Instruction getCommand(byte[] codeBlock, int i) {

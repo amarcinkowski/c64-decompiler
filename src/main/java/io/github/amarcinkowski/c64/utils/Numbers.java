@@ -32,7 +32,7 @@ public class Numbers {
     // test +/- byte numbers
     public static String dec(byte[] x) {
         String h = hexInv(x);
-        String d = h.length() > 0 ? "" + Integer.parseInt(hexInv(x), 16) : "";
+        String d = h.length() > 0 ? "" + Long.parseLong(hexInv(x), 16) : "";
 //        System.out.println("debug " + Arrays.toString(x) + " " + h + " " + d);
         return d;
     }
@@ -43,11 +43,14 @@ public class Numbers {
             a += "$" + hex(array);
         } else if (array.length == 2) {
             a += "$" + hexInv(array);
-        } else a = "??";
+        } else a = "?";
         a += addressing.postfix;
         return a;
     }
 
+    public static String unsigned(String num) {
+        return "" + ((byte) Integer.parseInt(num));
+    }
 
     // +test 00 01 == 256 + 1
     public static String hexInv(byte[] array) {
