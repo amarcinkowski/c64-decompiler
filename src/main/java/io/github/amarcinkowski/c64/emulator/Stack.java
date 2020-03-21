@@ -1,4 +1,4 @@
-package io.github.amarcinkowski.c64.registers;
+package io.github.amarcinkowski.c64.emulator;
 
 /**
  * https://www.c64-wiki.com/wiki/Stack

@@ -1,0 +1,22 @@
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{HH:mm:ss.SSS} %-5level %-20logger{1} %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <logger name="io.github.amarcinkowski" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- NO Logback status -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <root level="error">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

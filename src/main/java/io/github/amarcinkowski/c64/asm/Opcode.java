@@ -4,12 +4,12 @@ import java.util.HashMap;
 
 import static io.github.amarcinkowski.c64.asm.Addressing.*;
 import static io.github.amarcinkowski.c64.asm.Mnemonic.*;
+import static io.github.amarcinkowski.c64.utils.Numbers.hex;
 
 /**
  * Opcodes taken and parsed from C=haking 1 ( http://www.ffd2.com/fridge/chacking/c=hacking1.txt )
  */
 
-@SuppressWarnings("unused")
 public enum Opcode {
 
     BRK_IMM(BRK, IMMEDIATE, 0x00,  1, 7),
@@ -120,7 +120,7 @@ public enum Opcode {
     ADC_IMM(ADC, IMMEDIATE, 0x69,  2, 2),
     ROR_ACC(ROR, ACCUMULATOR, 0x6A,  1, 2),
     ARR_IMM(ARR, IMMEDIATE, 0x6B,  1, 2, 5),
-    JMP_INDIRECT(JMP, INDIRECT, 0x6C,  3, 5),
+    JMP_IND(JMP, INDIRECT, 0x6C,  3, 5),
     ADC_ABS(ADC, ABSOLUTE, 0x6D,  3, 4),
     ROR_ABS(ROR, ABSOLUTE, 0x6E,  3, 6),
     RRA_ABS(RRA, ABSOLUTE, 0x6F,  3, 6, 5),
@@ -273,28 +273,35 @@ public enum Opcode {
     public Mnemonic mnemonic;
     public Addressing addressing;
     public int hex;
-    public int bytes;
+    public int length;
     public int time;
     public int timeb;
 
 
-    static HashMap<Integer, Opcode> map = new HashMap<>();
+    static HashMap<Integer, Opcode> hex2opcode = new HashMap<>();
 
     static {
         for (Opcode o : values()) {
-            map.put(o.hex, o);
+            hex2opcode.put(o.hex, o);
         }
     }
 
-    public static Opcode byMnemonic(int mnemonic) {
-        return map.get(mnemonic);
+    public static Opcode getByHexValue(int mnemonic) {
+        return hex2opcode.get(mnemonic);
+    }
+    public static Opcode getByHexString(String mnemonic) {
+        return getByHexValue(Integer.parseInt(mnemonic, 16));
+    }
+    public static Opcode getByBytecode(byte asm) {
+        String hex = hex(asm);
+        return getByHexString(hex);
     }
 
     Opcode(Mnemonic type, Addressing addressing, int hex, int bytes, int time, int timeb) {
         this.mnemonic = type;
         this.hex = hex;
         this.addressing = addressing;
-        this.bytes = bytes;
+        this.length = bytes;
         this.time = time;
         this.timeb = timeb;
     }
@@ -303,13 +310,9 @@ public enum Opcode {
         this.mnemonic = type;
         this.hex = hex;
         this.addressing = addressing;
-        this.bytes = bytes;
+        this.length = bytes;
         this.time = time;
         this.timeb = 0;
-    }
-
-    public static Opcode get(String mnemonic) {
-        return byMnemonic(Integer.parseInt(mnemonic, 16));
     }
 
     @Override

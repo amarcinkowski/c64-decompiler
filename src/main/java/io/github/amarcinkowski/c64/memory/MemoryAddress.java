@@ -1,5 +1,8 @@
 package io.github.amarcinkowski.c64.memory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -238,7 +241,7 @@ public enum MemoryAddress {
     /* $C000-$CFFF, 49152-53247 Upper RAM area */
     $C000_$CFFF(49152, 4096, null, "Upper RAM area (4096 bytes)."), //
     /* $D000-$DFFF, 53248-57343 I/O Area */
-    $D000_$DFFF(53248, 4096, null, "I/O Area (memory mapped chip registers), Character ROM or RAM area (4096 bytes)."), //
+    $D000_$DFFF(53248, 4096, null, "I/O Area (memory mapped chip emulator), Character ROM or RAM area (4096 bytes)."), //
     /* $D000-$DFFF, 53248-57343 Character ROM */
     $D000_$DFFF_(53248, 4096, null, "Character ROM, shape of characters (4096 bytes)."), //
     $D000_$D7FF(53248, 2048, null,
@@ -361,11 +364,11 @@ public enum MemoryAddress {
     $DD10_$DDFF(56592, 240, null, "CIA#2 register images (repeated every $10, 16 bytes)."), //
     /* $DE00-$DEFF, 56832-57087 I/O Area #1 */
     $DE00_$DEFF(56832, 256, null,
-            "I/O Area #1, memory mapped registers or machine code routines " +
+            "I/O Area #1, memory mapped emulator or machine code routines " +
                     "of optional external devices (256 bytes)."), //
     /* $DF00-$DFFF, 57088-57343 I/O Area #2 */
     $DF00_$DFFF(57088, 256, null,
-            "I/O Area #2, memory mapped registers or machine code routines " +
+            "I/O Area #2, memory mapped emulator or machine code routines " +
                     "of optional external devices (256 bytes)."), //
     /* $E000-$FFFF, 57344-65535 KERNAL ROM */
     $E000_$FFFF(57344, 8192, null, "KERNAL ROM or RAM area (8192 bytes)."), //
@@ -374,6 +377,8 @@ public enum MemoryAddress {
     $FFFC_$FFFD(65532, 2, "$FCE2", "Execution address of cold reset."), //
     $FFFE_$FFFF(65534, 2, "$FF48", "Execution address of interrupt service routine."),//
     ;
+
+    private final static Logger logger = LoggerFactory.getLogger(MemoryAddress.class);
 
     static SmallestRangeSorter srs = new SmallestRangeSorter();
     final static List<MemoryAddress> memoryAddressRangeSorted = Arrays.stream(MemoryAddress.values()).sorted(srs).collect(Collectors.toList());
@@ -384,20 +389,13 @@ public enum MemoryAddress {
             MemoryAddress ma = memoryAddressRangeSorted.stream().filter(p -> p.start <= address && (p.start + p.size - 1 >= address)).findFirst().orElse(null);
             return ma;
         } catch (Exception e) {
-            System.err.println("wrong or no adr");
+            logger.trace("wrong or no adr");
             return null;
         }
-//        System.out.print("\nadr " + adr);
-//        Object[] ma = Arrays.stream(MemoryAddress.values()).filter(p -> p.start <= adr && (p.start + p.size - 1 >= adr)).sorted(srs).toArray();//.findFirst().orElse(null);
-
-//        for(Object o : ma) {
-//            System.out.print(" " + ma);
-//            MemoryMap mm = Arrays.stream(MemoryMap.values()).filter(p -> p.getMemory() == ma).findFirst().orElse(null);
-//            System.out.print(" " + mm);
-//        }
     }
 
-    private MemoryAddress(int start, int size, String def, String desc) {
+
+    MemoryAddress(int start, int size, String def, String desc) {
         this.start = start;
         this.size = size;
         this.description = desc;

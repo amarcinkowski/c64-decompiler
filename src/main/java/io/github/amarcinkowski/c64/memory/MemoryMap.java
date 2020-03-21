@@ -1010,7 +1010,7 @@ public enum MemoryMap {
 	*/
 
 	/**
-	I/O Area (memory mapped chip registers), Character ROM or RAM area (4096 bytes). depends on the value of bits #0-#2 of the processor port at memory address $0001:%x00: RAM area. %0xx: Character ROM. (Except for the value %000, see above.) %1xx: I/O Area. (Except for the value %100, see above.)
+	I/O Area (memory mapped chip emulator), Character ROM or RAM area (4096 bytes). depends on the value of bits #0-#2 of the processor port at memory address $0001:%x00: RAM area. %0xx: Character ROM. (Except for the value %000, see above.) %1xx: I/O Area. (Except for the value %100, see above.)
 	*/
 	I_O_AREA ($D000_$DFFF),
 	/**
@@ -1457,7 +1457,7 @@ public enum MemoryMap {
 	TIMER_A_CONTROL_REGISTER ($DC0E),
 	/**
 	Timer B control register. Bits:
-	Bit #0: 0 = Stop timer; 1 = Start timer. Bit #1: 1 = Indicate timer underflow on port B bit #7. Bit #2: 0 = Upon timer underflow, invert port B bit #7; 1 = upon timer underflow, generate a positive edge on port B bit #7 for 1 system cycle. Bit #3: 0 = Timer restarts upon underflow; 1 = Timer stops upon underflow. Bit #4: 1 = Load start value into timer. Bits #5-#6: %00 = Timer counts system cycles; %01 = Timer counts positive edges on CNT pin; %10 = Timer counts underflows of timer A; %11 = Timer counts underflows of timer A occurring along with a positive edge on CNT pin. Bit #7: 0 = Writing into TOD registers sets TOD; 1 = Writing into TOD registers sets alarm time.
+	Bit #0: 0 = Stop timer; 1 = Start timer. Bit #1: 1 = Indicate timer underflow on port B bit #7. Bit #2: 0 = Upon timer underflow, invert port B bit #7; 1 = upon timer underflow, generate a positive edge on port B bit #7 for 1 system cycle. Bit #3: 0 = Timer restarts upon underflow; 1 = Timer stops upon underflow. Bit #4: 1 = Load start value into timer. Bits #5-#6: %00 = Timer counts system cycles; %01 = Timer counts positive edges on CNT pin; %10 = Timer counts underflows of timer A; %11 = Timer counts underflows of timer A occurring along with a positive edge on CNT pin. Bit #7: 0 = Writing into TOD emulator sets TOD; 1 = Writing into TOD emulator sets alarm time.
 	*/
 	TIMER_B_CONTROL_REGISTER ($DC0F),
 	/**
@@ -1536,7 +1536,7 @@ public enum MemoryMap {
 	TIMER_A_CONTROL_REGISTER_CIA2($DD0E),
 	/**
 	Timer B control register. Bits:
-	Bit #0: 0 = Stop timer; 1 = Start timer. Bit #1: 1 = Indicate timer underflow on port B bit #7. Bit #2: 0 = Upon timer underflow, invert port B bit #7; 1 = upon timer underflow, generate a positive edge on port B bit #7 for 1 system cycle. Bit #3: 0 = Timer restarts upon underflow; 1 = Timer stops upon underflow. Bit #4: 1 = Load start value into timer. Bits #5-#6: %00 = Timer counts system cycles; %01 = Timer counts positive edges on CNT pin; %10 = Timer counts underflows of timer A; %11 = Timer counts underflows of timer A occurring along with a positive edge on CNT pin. Bit #7: 0 = Writing into TOD registers sets TOD; 1 = Writing into TOD registers sets alarm time.
+	Bit #0: 0 = Stop timer; 1 = Start timer. Bit #1: 1 = Indicate timer underflow on port B bit #7. Bit #2: 0 = Upon timer underflow, invert port B bit #7; 1 = upon timer underflow, generate a positive edge on port B bit #7 for 1 system cycle. Bit #3: 0 = Timer restarts upon underflow; 1 = Timer stops upon underflow. Bit #4: 1 = Load start value into timer. Bits #5-#6: %00 = Timer counts system cycles; %01 = Timer counts positive edges on CNT pin; %10 = Timer counts underflows of timer A; %11 = Timer counts underflows of timer A occurring along with a positive edge on CNT pin. Bit #7: 0 = Writing into TOD emulator sets TOD; 1 = Writing into TOD emulator sets alarm time.
 	*/
 	TIMER_B_CONTROL_REGISTER_CIA2($DD0F),
 	/**
@@ -1548,7 +1548,7 @@ public enum MemoryMap {
 	*/
 
 	/**
-	I/O Area #1, memory mapped registers or machine code routines of optional external devices (256 bytes). Layout and contents depend on the actual device.
+	I/O Area #1, memory mapped emulator or machine code routines of optional external devices (256 bytes). Layout and contents depend on the actual device.
 	*/
 	I_O_AREA_1_MEMORY_MAPPED_REGISTERS_OR_MACHINE_CODE_ROUTINES_OF_OPTIONAL_EXTERNAL_DEVICES ($DE00_$DEFF),
 	/**
@@ -1556,7 +1556,7 @@ public enum MemoryMap {
 	*/
 
 	/**
-	I/O Area #2, memory mapped registers or machine code routines of optional external devices (256 bytes). Layout and contents depend on the actual device.
+	I/O Area #2, memory mapped emulator or machine code routines of optional external devices (256 bytes). Layout and contents depend on the actual device.
 	*/
 	I_O_AREA_2_MEMORY_MAPPED_REGISTERS_OR_MACHINE_CODE_ROUTINES_OF_OPTIONAL_EXTERNAL_DEVICES ($DF00_$DFFF),
 	/**

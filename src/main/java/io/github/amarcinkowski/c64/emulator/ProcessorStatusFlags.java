@@ -1,4 +1,4 @@
-package io.github.amarcinkowski.c64.registers;
+package io.github.amarcinkowski.c64.emulator;
 
 /**
  * Processor status
@@ -16,6 +16,9 @@ package io.github.amarcinkowski.c64.registers;
  * Following is a list of the flags, starting from the 8th
  * bit of the P register (bit 7, value $80):
  * </p>
+ *
+ * https://archive.org/stream/1984-10-compute-magazine/Compute_Issue_053_1984_Oct#page/n135/mode/2up
+ *
  * @implNote vaules: http://www.oxyron.de/html/opcodes02.html
  * @implSpec javadoc: http://www.zimmers.net/anonftp/pub/cbm/documents/chipdata/64doc
  */
@@ -25,7 +28,7 @@ public enum ProcessorStatusFlags {
      * N   Negative flag
      * <p>
      * This flag will be set after any arithmetic operations
-     * (when any of the registers A, X or Y is being loaded
+     * (when any of the emulator A, X or Y is being loaded
      * with a value). Generally, the N flag will be copied
      * from the topmost bit of the register being loaded.
      * <p>
@@ -35,7 +38,7 @@ public enum ProcessorStatusFlags {
      * Finally, the Negative flag behaves differently in
      * Decimal operations (see description below).
      */
-    N("negative flag", "1 when result is negative"),
+    N("negative flag", "1 when result is negative",0),
     /**
      * V   oVerflow flag
      * <p>
@@ -74,13 +77,14 @@ public enum ProcessorStatusFlags {
      * A common misbelief is that the V flag could only be
      * set by arithmetic operations, not cleared.
      */
-    V("overflow flag", "1 on signed overflow"),
+    V("overflow flag", "1 on signed overflow",0),
     /**
      * 1   unused flag
      * <p>
      * To the current knowledge, this flag is always 1.
      */
-    _un("unused", "always 1"),
+    @SuppressWarnings("all")
+    o("unused", "always 1",1),
     /**
      * B   Break flag
      * <p>
@@ -97,7 +101,7 @@ public enum ProcessorStatusFlags {
      * jump to the NMI vector ($FFFA), and the P register
      * will be pushed on the stack with the B flag set.
      */
-    B("break flag", "1 when interupt was caused by a BRK"),
+    B("break flag", "1 when interupt was caused by a BRK",0),
     /**
      * D   Decimal mode flag
      * <p>
@@ -109,7 +113,7 @@ public enum ProcessorStatusFlags {
      * differently on CMOS processors. See the description
      * of the ADC, SBC and ARR instructions below.
      */
-    D("decimal flag", "1 when CPU in BCD mode"),
+    D("decimal flag", "1 when CPU in BCD mode",0),
     /**
      * I   Interrupt disable flag
      * <p>
@@ -121,7 +125,7 @@ public enum ProcessorStatusFlags {
      * routine if the -IRQ signal remains low for several
      * clock cycles.
      */
-    I("IRQ flag", "when 1, no interupts will occur, exceptions are IRQs forced by BRK and NMIs"),
+    I("IRQ flag", "when 1, no interupts will occur, exceptions are IRQs forced by BRK and NMIs",0),
     /**
      * Z   Zero flag
      * <p>
@@ -131,7 +135,7 @@ public enum ProcessorStatusFlags {
      * zero, and cleared otherwise. The flag will behave
      * differently in Decimal operations.
      */
-    Z("zero flag", "1 when all bits of a result are 0"),
+    Z("zero flag", "1 when all bits of a result are 0",1),
     /**
      * C   Carry flag
      * <p>
@@ -153,15 +157,17 @@ public enum ProcessorStatusFlags {
      * of the byte; ASL always clears it. Similarly, the ROR
      * and LSR instructions shift to the right.
      */
-    C("carry flag", "1 on unsigned overflow"),
+    C("carry flag", "1 on unsigned overflow",0),
     ;
 
     public String name;
     public String description;
+    public int defaultValue;
 
-    ProcessorStatusFlags(String name, String description) {
+    ProcessorStatusFlags(String name, String description, int defaultValue) {
         this.name = name;
         this.description = description;
+        this.defaultValue = defaultValue;
     }
 
 }

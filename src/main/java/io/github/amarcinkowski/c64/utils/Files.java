@@ -1,13 +1,19 @@
 package io.github.amarcinkowski.c64.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
 public class Files {
+
+    private final static Logger logger = LoggerFactory.getLogger(Files.class);
+
     public static byte[] readFile(String path) {
         File f = new File(path);
-        System.out.println("file " + f.getAbsolutePath());
+        logger.info("reading file " + f.getAbsolutePath());
         try {
             return java.nio.file.Files.readAllBytes(f.toPath());
         } catch (IOException e) {
@@ -22,7 +28,7 @@ public class Files {
 
     public static void toFile(String s) {
         try {
-            java.nio.file.Files.write(Paths.get("output.txt"), s.getBytes());
+            java.nio.file.Files.write(Paths.get("bytecode.txt"), s.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

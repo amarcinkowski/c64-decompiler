@@ -1,47 +1,43 @@
 package io.github.amarcinkowski.c64;
 
-import io.github.amarcinkowski.c64.asm.Parser;
-import io.github.amarcinkowski.c64.asm.template.MemCopyYCounter;
-import io.github.amarcinkowski.c64.output.Bytecode;
-import io.github.amarcinkowski.c64.output.Language;
-import io.github.amarcinkowski.c64.output.LanguagesFactory;
+import io.github.amarcinkowski.c64.asm.Assembler;
+import io.github.amarcinkowski.c64.asm.AssemblerDecorator;
+import io.github.amarcinkowski.c64.asm.template.Template;
+import io.github.amarcinkowski.c64.basic.Basic;
+import io.github.amarcinkowski.c64.bytecode.Bytecode;
+import io.github.amarcinkowski.c64.emulator.Emulator;
+import io.github.amarcinkowski.c64.utils.BytecodeUtils;
 import io.github.amarcinkowski.c64.utils.Files;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import static io.github.amarcinkowski.c64.utils.Files.readNBytes;
+import static io.github.amarcinkowski.c64.utils.Files.readFile;
 
 public class Decompiler {
 
+    final static Logger logger = LoggerFactory.getLogger(Decompiler.class);
 //        final static String FILE = "src/test/resources/colors2.prg";
 
-        static String FILE = "/media/am/eb1cf6e9-eafb-4546-9edb-c8e9195d9643/gamebase c64/apps/";
-        static {
-            FILE += "c64/1_1STDIVIS/1st division m.";
-        }
+    static String FILE = "/media/am/eb1cf6e9-eafb-4546-9edb-c8e9195d9643/gamebase c64/apps/";
+
+    static {
+        FILE += "c64/1_WWF0/wwf wrestling";
+    }
 /*
-    BASIC c64/1_18UHREN/18 uhren
-
     c64/1_1STDIVIS/1st division m.
-
-    c64/1_ABOULDER/a-boulder 64
-    c64/1_ADVENT64/adventure 64
-    c64/1_AKTIENSP/das aktienspiel
-    c64/1_ALCHEMY1/alchemy 1k
     c64/1_ALIENSY0/alien syndrome+
     c64/1_ALTCITY4/ar-city char.ed.
-            c64/1_AMBASSAD/ambassador
+    c64/1_AMBASSAD/ambassador
     c64/1_AMERICHA/american chall.
     c64/1_ANIMALS!/animals!
     c64/1_ANOTHER0/another world+
     c64/1_ANOTHER1/another w. note
     c64/1_ANOTHER2/another wor. dox
-    c64/1_ANTITUER/anti tuerkentest
     c64/1_APACHEST/apache strike
     c64/1_AP/ap
+
     c64/1_APOCAL-E/apocalypse now+
     c64/1_ARABIANT/arabian treasur.
     c64/1_ARSCET/arscet
@@ -97,50 +93,66 @@ public class Decompiler {
     c64/1_WWF0/wwf wrestling
 */
 
-//    final static String FILE = "src/test/resources/colors2.prg";
-//    final static String FILE = "/home/am/Pulpit/giana/ggs.prg";
-//    great giana s.+.prg
-    final static byte[] fileContent = readNBytes(FILE,128); // readFile(FILE);
+    final static byte[] fileContent = readFile(FILE);
 
-    public static void main(String[] args) throws IOException {
-        Parser p = new Parser();
-        p.parse(fileContent);
+    public static void main(String[] args) throws Exception {
 
-        Language asm = LanguagesFactory.get("asm");
-        Language bytecode = LanguagesFactory.get("byte");
-//        Language basic = LanguagesFactory.get("basic");
+        PrgLoader prg = new PrgLoader();
+        prg.load(fileContent);
 
-        bytecode.parse(p);
-        asm.parse(p);
-//        basic.parse(p);
+        Basic basic = new Basic();
+        basic.parse(prg.basic);
 
-        System.out.println(Bytecode.decorate(bytecode.toString()) + "\n\n");
+        Bytecode bytecode = new Bytecode();
+        bytecode.parse(prg.asm, prg.destinationAddress + prg.asmStartInFile);
 
-        System.out.println(bytecode.toString() + "\n");
-        patterns(bytecode.toString());
+        Assembler asm = new Assembler();
+        asm.parse(bytecode.instructions);
 
-        System.out.println(asm.toString());
-        Files.toFile(asm.toString());
-//        System.out.println(basic.toString());
+        logger.trace("raw " + BytecodeUtils.format(bytecode));
+        logger.trace("decorated bytecode" + BytecodeUtils.hexFormat(bytecode.toString(), prg.asmStart) + "\n");
 
-
-        System.out.println("\n\nx64 -remotemonitor -autoload \"" + FILE + "\" &");
-        System.out.println("telnet 127.0.0.1 6510\n\n");
-    }
-
-    private static void patterns(String bytecode) {
-        String memCopyPattern = MemCopyYCounter.getRegularExpression();
-        System.out.println(memCopyPattern);
-        Pattern pattern = Pattern.compile(memCopyPattern);
-        Matcher m = pattern.matcher(bytecode);
-        while(m.find()) {
-            String desc = MemCopyYCounter.DESC;
-            String[] args =MemCopyYCounter.getArguments(m.group());
-            System.out.println(desc + " " + Arrays.toString(args));
-            String s = String.format(MemCopyYCounter.DESC, args);
-            System.out.println("FOUND " + MemCopyYCounter.NAME + "\t" + m.group()+ "\t" + s);
+        String formatted = BytecodeUtils.format(bytecode);
+        for (Class<? extends Template> tc : Template.getSubtypes()) {
+            Template t = tc.newInstance();
+            t.findTemplateInCode(formatted);
         }
 
+        Emulator e = new Emulator();
+        logger.info(e.toString());
+
+        // stream.... to hex string ... move to utils
+        String asmStr = bytecode.instructions.stream().map(Object::toString).map(String::trim).collect(Collectors.joining("."));
+        logger.debug(BytecodeUtils.hexFormat(asmStr,0x80b).substring(0,500) + "  (...)");
+
+        Files.toFile(asm.toString());
+
+//        byte[] codeblock = prg.codeBlock;
+//        byte[] range;
+//        System.out.println("mem size " + mem.length);
+//        System.out.println("block size " + codeblock.length);
+//        mem = replace(mem, codeblock, 0x0801);
+//        System.out.println("replace");
+//        System.out.println("mem size " + mem.length);
+//        range = Arrays.range(mem, 0x80b, );
+//        logger.info(java.util.Arrays.toString(range));
+//        byte[] copied = Arrays.range(mem, 0xb07 + 1, 0xb07 + 0xbd);
+//        mem = replace(mem, copied, 0xfc + 1);
+
+//        /*byte[]*/ range = Arrays.range(mem,0x101, 0x130);
+//        Assembler asm2 = new Assembler();
+//        asm2.parse(range, 0x101);
+        logger.info(new AssemblerDecorator(asm).toString());
+
+//        logger.debug("> " + bytecode.instructions.stream().map(Object::toString).collect(Collectors.joining("\n")));
+
+//        System.out.println("\n\nx64 -remotemonitor -autoload \"" + FILE + "\" &");
+//        System.out.println("telnet 127.0.0.1 6510\n\n");
+
     }
+
+
+
+
 
 }

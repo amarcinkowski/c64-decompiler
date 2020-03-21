@@ -1,4 +1,4 @@
-package io.github.amarcinkowski.c64.registers;
+package io.github.amarcinkowski.c64.emulator;
 
 /**
  * http://www.zimmers.net/anonftp/pub/cbm/documents/chipdata/64doc
@@ -10,7 +10,7 @@ public enum Register6502 {
     /**
      * This register points the address from which the next
      * instruction byte (opcode or parameter) will be fetched.
-     * Unlike other registers, this one is 16 bits in length. The
+     * Unlike other emulator, this one is 16 bits in length. The
      * low and high 8-bit halves of the register are called PCL
      * and PCH, respectively.
      * <p>
@@ -45,10 +45,10 @@ public enum Register6502 {
 
     /**
      * The accumulator is the main register for arithmetic and
-     * logic operations. Unlike the index registers X and Y, it
+     * logic operations. Unlike the index emulator X and Y, it
      * has a direct connection to the Arithmetic and Logic Unit
      * (ALU). This is why many operations are only available for
-     * the accumulator, not the index registers.
+     * the accumulator, not the index emulator.
      */
     A("Accumulator", 0),
 

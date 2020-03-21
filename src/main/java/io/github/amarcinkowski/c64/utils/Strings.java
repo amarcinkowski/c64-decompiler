@@ -17,4 +17,12 @@ public class Strings {
     public static String putNewLineEvery16bytes(String s) {
         return putCharEveryNth(s, 52, "\n");
     }
+
+    public static String times(String character, int length) {
+        String s = "";
+        for(int i = 0; i < length; i++) {
+            s+= character;
+        }
+        return s;
+    }
 }
