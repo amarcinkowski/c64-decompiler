@@ -1,4 +1,9 @@
 .gradle/
 .idea/
+.settings/
+.classpath
+.project
 build/
 gradle/
+bin/
+lib/KickAss.jar
